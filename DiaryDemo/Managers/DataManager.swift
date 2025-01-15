@@ -5,6 +5,7 @@
 //  Created by Konrad Painta on 1/14/25.
 //
 
+import CoreSpotlight
 import SwiftData
 import SwiftUI
 
@@ -23,6 +24,11 @@ import SwiftUI
     private func fetchData() throws {
         let descriptor = FetchDescriptor<Entry>()
         entries = try modelContext.fetch(descriptor)
+
+        let entities = entries.map { DiaryEntryEntity($0) }
+        Task {
+            try await CSSearchableIndex.default().indexAppEntities(entities)
+        }
     }
 
     func createEntry(title: String? = nil, message: String? = nil, date: Date? = nil) throws -> Entry {
@@ -37,6 +43,11 @@ import SwiftUI
 
         entries.append(newEntry)
 
+        Task {
+            let entity = DiaryEntryEntity(newEntry)
+            try await CSSearchableIndex.default().indexAppEntities([entity])
+        }
+
         return newEntry
     }
 
@@ -48,6 +59,11 @@ import SwiftUI
         entries.removeAll(where: {
             $0.id == entry.id
         })
+
+        Task {
+            let entity = DiaryEntryEntity(entry)
+            try await CSSearchableIndex.default().deleteAppEntities(identifiedBy: [entity.id], ofType: DiaryEntryEntity.self)
+        }
     }
 }
 
