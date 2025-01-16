@@ -5,6 +5,7 @@
 //  Created by Konrad Painta on 1/13/25.
 //
 
+import AppIntents
 import SwiftData
 import SwiftUI
 
@@ -32,6 +33,8 @@ struct ContentView: View {
 
         NavigationStack(path: $navigator.path) {
             VStack {
+                SiriTipView(intent: CreateDiaryEntryIntent())
+
                 List(filteredEntries) { entry in
                     NavigationLink(value: entry) {
                         HStack {

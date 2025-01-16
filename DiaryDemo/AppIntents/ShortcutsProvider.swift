@@ -11,7 +11,7 @@ struct DiaryDemoShortcutsProvider: AppShortcutsProvider {
     static var appShortcuts: [AppShortcut] {
         AppShortcut(
             intent: CreateDiaryEntryIntent(),
-            phrases: ["Create \(.applicationName)"],
+            phrases: ["Create \(.applicationName) Entry"],
             shortTitle: "Create Entry",
             systemImageName: "pencil.and.outline"
         )
